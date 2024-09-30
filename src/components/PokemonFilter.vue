@@ -1,6 +1,6 @@
 <template>
   <div class="filter">
-    <input v-model="searchQuery" placeholder="Pesquisar Pokémon..." />
+    <input v-model="searchQuery" @input="emitSearch" placeholder="Pesquisar Pokémon..." />
   </div>
 </template>
 
@@ -8,11 +8,16 @@
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-  setup() {
+  setup(_, { emit }) {
     const searchQuery = ref('');
+
+    const emitSearch = () => {
+      emit('update:search', searchQuery.value);
+    };
 
     return {
       searchQuery,
+      emitSearch,
     };
   },
 });
