@@ -2,22 +2,22 @@
   <div class="pokemon-list-container">
     <PokemonFilter @update:search="setSearchQuery" />
 
-    <div class="pokemon-list">
+    <div class="pokemon-list" v-if="paginatedPokemonList.length">
       <PokemonCard
-        v-for="(pokemon, index) in displayedPokemonList"
+        v-for="(pokemon, index) in paginatedPokemonList"
         :key="pokemon.name"
         :pokemon="pokemon"
         :pokemonId="getPokemonId(pokemon.url)"
       />
     </div>
 
-    <div v-if="displayedPokemonList.length > 0" class="pagination">
+    <div class="pagination" v-if="paginatedPokemonList.length">
       <button @click="prevPage" :disabled="offset === 0">Anterior</button>
       <span>Página {{ currentPage }}</span>
       <button @click="nextPage" :disabled="!hasMorePokemon">Próxima</button>
     </div>
 
-    <div v-if="!displayedPokemonList.length" class="no-results">Nenhum Pokémon encontrado.</div>
+    <div v-if="!paginatedPokemonList.length && pokemonList.length" class="no-results">Nenhum Pokémon encontrado.</div>
   </div>
 </template>
 
@@ -32,47 +32,57 @@ export default defineComponent({
   setup() {
     const {
       pokemonList,
-      fetchAllPokemons,
       totalPokemon,
-      offset,
+      fetchPokemon,
+      fetchAllPokemons,
       limit,
+      offset,
     } = usePokemon();
 
     const searchQuery = ref('');
 
     const setSearchQuery = (query: string) => {
       searchQuery.value = query.toLowerCase();
+      offset.value = 0;
+      fetchAllPokemons();
     };
 
-    const displayedPokemonList = computed(() => {
+    const filteredPokemonList = computed(() => {
       if (!searchQuery.value.trim()) {
         return pokemonList.value;
       }
-
       return pokemonList.value.filter(pokemon =>
         pokemon.name.toLowerCase().includes(searchQuery.value)
       );
     });
 
-    const currentPage = computed(() => (offset.value / limit) + 1);
-    const hasMorePokemon = computed(() => offset.value + limit < totalPokemon.value);
+    const paginatedPokemonList = computed(() => {
+      const start = offset.value;
+      const end = start + limit;
+      return filteredPokemonList.value.slice(start, end);
+    });
+
+    const currentPage = computed(() => Math.floor(offset.value / limit) + 1);
+    const hasMorePokemon = computed(() => offset.value + limit < filteredPokemonList.value.length);
 
     const nextPage = () => {
       if (hasMorePokemon.value) {
         offset.value += limit;
-        fetchAllPokemons();
       }
     };
 
     const prevPage = () => {
       if (offset.value > 0) {
         offset.value -= limit;
-        fetchAllPokemons();
       }
     };
 
+    const loadInitialPokemons = async () => {
+      await fetchAllPokemons();
+    };
+
     onMounted(() => {
-      fetchAllPokemons();
+      loadInitialPokemons();
     });
 
     const getPokemonId = (url: string) => {
@@ -81,13 +91,15 @@ export default defineComponent({
     };
 
     return {
-      displayedPokemonList,
+      paginatedPokemonList,
       currentPage,
       nextPage,
       prevPage,
       hasMorePokemon,
       getPokemonId,
       setSearchQuery,
+      pokemonList,
+      offset,
     };
   },
 });
