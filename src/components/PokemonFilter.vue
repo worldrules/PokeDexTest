@@ -1,6 +1,6 @@
 <template>
   <div class="filter">
-    <input v-model="searchQuery" @input="emitSearch" placeholder="Pesquisar Pokémon..." />
+    <input v-model="searchQuery" @input="emitSearch" :placeholder="$t('search_placeholder')" />
   </div>
 </template>
 
