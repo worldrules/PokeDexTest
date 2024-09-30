@@ -1,0 +1,26 @@
+body {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+    background-color: black;
+    color: black;
+}
+
+.dark h1,
+.dark p {
+    color: white;
+}
+
+.dark button {
+    color: white;
+    background-color: transparent;
+    border: 1px solid white;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
