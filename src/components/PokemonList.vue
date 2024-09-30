@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, ref, watch } from 'vue';
+import { defineComponent, computed, onMounted, ref } from 'vue';
 import { usePokemon } from '@/composables/usePokemon';
 import PokemonCard from './PokemonCard.vue';
 import PokemonFilter from './PokemonFilter.vue';
@@ -32,7 +32,7 @@ export default defineComponent({
   setup() {
     const {
       pokemonList,
-      getPokemonList,
+      fetchAllPokemons,
       totalPokemon,
       offset,
       limit,
@@ -48,8 +48,8 @@ export default defineComponent({
       if (!searchQuery.value.trim()) {
         return pokemonList.value;
       }
-      
-      return pokemonList.value.filter(pokemon => 
+
+      return pokemonList.value.filter(pokemon =>
         pokemon.name.toLowerCase().includes(searchQuery.value)
       );
     });
@@ -60,19 +60,19 @@ export default defineComponent({
     const nextPage = () => {
       if (hasMorePokemon.value) {
         offset.value += limit;
-        getPokemonList(offset.value);
+        fetchAllPokemons();
       }
     };
 
     const prevPage = () => {
       if (offset.value > 0) {
         offset.value -= limit;
-        getPokemonList(offset.value);
+        fetchAllPokemons();
       }
     };
 
     onMounted(() => {
-      getPokemonList();
+      fetchAllPokemons();
     });
 
     const getPokemonId = (url: string) => {
