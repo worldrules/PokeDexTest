@@ -1,18 +1,28 @@
 <template>
   <div class="pokemon-list-container">
     <PokemonFilter @update:search="setSearchQuery" />
+
     <div class="pokemon-list">
       <PokemonCard
-        v-for="pokemon in filteredPokemonList"
+        v-for="(pokemon, index) in displayedPokemonList"
         :key="pokemon.name"
         :pokemon="pokemon"
+        :pokemonId="getPokemonId(pokemon.url)"
       />
     </div>
+
+    <div v-if="displayedPokemonList.length > 0" class="pagination">
+      <button @click="prevPage" :disabled="offset === 0">Anterior</button>
+      <span>Página {{ currentPage }}</span>
+      <button @click="nextPage" :disabled="!hasMorePokemon">Próxima</button>
+    </div>
+
+    <div v-if="!displayedPokemonList.length" class="no-results">Nenhum Pokémon encontrado.</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, computed, onMounted, ref, watch } from 'vue';
 import { usePokemon } from '@/composables/usePokemon';
 import PokemonCard from './PokemonCard.vue';
 import PokemonFilter from './PokemonFilter.vue';
@@ -20,24 +30,63 @@ import PokemonFilter from './PokemonFilter.vue';
 export default defineComponent({
   components: { PokemonCard, PokemonFilter },
   setup() {
-    const { pokemonList, getPokemonList } = usePokemon();
+    const {
+      pokemonList,
+      getPokemonList,
+      totalPokemon,
+      offset,
+      limit,
+    } = usePokemon();
+
     const searchQuery = ref('');
 
     const setSearchQuery = (query: string) => {
       searchQuery.value = query.toLowerCase();
     };
 
-    const filteredPokemonList = computed(() =>
-      pokemonList.value.filter(pokemon =>
+    const displayedPokemonList = computed(() => {
+      if (!searchQuery.value.trim()) {
+        return pokemonList.value;
+      }
+      
+      return pokemonList.value.filter(pokemon => 
         pokemon.name.toLowerCase().includes(searchQuery.value)
-      )
-    );
+      );
+    });
 
-    getPokemonList();
+    const currentPage = computed(() => (offset.value / limit) + 1);
+    const hasMorePokemon = computed(() => offset.value + limit < totalPokemon.value);
+
+    const nextPage = () => {
+      if (hasMorePokemon.value) {
+        offset.value += limit;
+        getPokemonList(offset.value);
+      }
+    };
+
+    const prevPage = () => {
+      if (offset.value > 0) {
+        offset.value -= limit;
+        getPokemonList(offset.value);
+      }
+    };
+
+    onMounted(() => {
+      getPokemonList();
+    });
+
+    const getPokemonId = (url: string) => {
+      const segments = url.split('/');
+      return segments[segments.length - 2];
+    };
 
     return {
-      pokemonList,
-      filteredPokemonList,
+      displayedPokemonList,
+      currentPage,
+      nextPage,
+      prevPage,
+      hasMorePokemon,
+      getPokemonId,
       setSearchQuery,
     };
   },
@@ -52,5 +101,19 @@ export default defineComponent({
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+}
+.pagination {
+  margin-top: 20px;
+}
+.no-results {
+  margin-top: 20px;
+  font-size: 18px;
+  color: red;
+}
+button {
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
 </style>
