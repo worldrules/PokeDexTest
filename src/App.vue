@@ -1,6 +1,13 @@
 <template>
   <div id="app">
-    <button @click="toggleTheme">Dark Mode</button>
+    <div>
+      <input type="checkbox" class="checkbox" id="theme-toggle" @click="toggleTheme" />
+      <label for="theme-toggle" class="checkbox-label">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+        <span class="ball"></span>
+      </label>
+    </div>
     <router-view />
   </div>
 </template>
@@ -8,7 +15,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useTheme } from '@/composables/useTheme';
-import './assets/styles.css';
 
 export default defineComponent({
   setup() {
