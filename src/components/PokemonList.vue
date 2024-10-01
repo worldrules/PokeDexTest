@@ -5,7 +5,8 @@
     <div class="pokemon-list" v-if="paginatedPokemonList.length">
       <PokemonCard v-for="pokemon in paginatedPokemonList" :key="pokemon.id" :pokemon="pokemon"
         :pokemonId="getPokemonId(pokemon.url)" @click="goToPokemonDetail(+getPokemonId(pokemon.url))"
-        :is-favorite="favoritePokemons.includes(pokemon.id)" @toggle-favorite="toggleFavorite(pokemon.id)" />
+        :is-favorite="favoritePokemons.some(fav => fav.id === pokemon.id)"
+        @toggle-favorite="toggleFavorite(pokemon.id, { name: pokemon.name, url: pokemon.url })" />
     </div>
 
     <div class="pagination" v-if="paginatedPokemonList.length">
@@ -35,7 +36,7 @@ export default defineComponent({
 
     const searchQuery = ref('');
     const selectedTypes = ref<string[]>([]);
-    const favoritePokemons = ref<number[]>([]);
+    const favoritePokemons = ref<{ id: number; name: string; url: string; image: string }[]>([]);
 
     const loadFavorites = () => {
       const storedFavorites = localStorage.getItem('favoritePokemons');
@@ -44,14 +45,26 @@ export default defineComponent({
       }
     };
 
-    const toggleFavorite = (pokemonId: number) => {
-      const index = favoritePokemons.value.indexOf(pokemonId);
+    const toggleFavorite = (pokemonId: number, pokemon: { name: string; url: string }) => {
+      const currentFavorites = JSON.parse(localStorage.getItem('favoritePokemons') || '[]');
+
+      const index = currentFavorites.findIndex((fav: any) => fav.id === pokemonId);
+
       if (index > -1) {
-        favoritePokemons.value.splice(index, 1);
+        currentFavorites.splice(index, 1);
       } else {
-        favoritePokemons.value.push(pokemonId);
+        const pokemonImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
+
+        currentFavorites.push({
+          id: pokemonId,
+          name: pokemon.name,
+          url: pokemon.url,
+          image: pokemonImage,
+        });
       }
-      localStorage.setItem('favoritePokemons', JSON.stringify(favoritePokemons.value));
+
+      localStorage.setItem('favoritePokemons', JSON.stringify(currentFavorites));
+      favoritePokemons.value = currentFavorites;
     };
 
     const setSearchQuery = (query: string) => {
@@ -153,7 +166,6 @@ export default defineComponent({
   },
 });
 </script>
-
 
 <style scoped>
 .pokemon-list-container {

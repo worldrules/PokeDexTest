@@ -3,7 +3,8 @@
         <h1>Pokémon Favoritos</h1>
         <div class="pokemon-list" v-if="favoritePokemons.length">
             <PokemonCard v-for="(pokemon, index) in favoritePokemons" :key="index" :pokemon="pokemon"
-                :pokemonId="getPokemonId(pokemon.url)" :isFavorite="true" @toggle-favorite="toggleFavorite" />
+                :pokemonId="getPokemonId(pokemon.url)" :pokemonImage="getPokemonImage(pokemon.url)" :isFavorite="true"
+                @toggle-favorite="toggleFavorite" />
         </div>
         <div v-else class="no-results">
             Nenhum Pokémon favorito encontrado.
@@ -20,20 +21,30 @@ export default defineComponent({
         PokemonCard,
     },
     setup() {
-        const favoritePokemons = ref(JSON.parse(localStorage.getItem('favoritePokemons') || '[]'));
+        const favoritePokemons = ref(
+            JSON.parse(localStorage.getItem('favoritePokemons') || '[]')
+        );
 
         const getPokemonId = (url: string) => {
-            if (!url) return ''; // Verifica se a URL está definida
+            if (!url) return '';
             const segments = url.split('/');
             return segments[segments.length - 2];
         };
 
+        const getPokemonImage = (url: string) => {
+            const id = getPokemonId(url);
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+        };
+
         const toggleFavorite = (id: string) => {
             const currentFavorites = favoritePokemons.value;
-            const index = currentFavorites.findIndex((pokemon: any) => getPokemonId(pokemon.url) === id);
+            const index = currentFavorites.findIndex(
+                (pokemon: any) => getPokemonId(pokemon.url) === id
+            );
             if (index !== -1) {
                 currentFavorites.splice(index, 1);
             } else {
+
             }
             localStorage.setItem('favoritePokemons', JSON.stringify(currentFavorites));
             favoritePokemons.value = currentFavorites;
@@ -42,6 +53,7 @@ export default defineComponent({
         return {
             favoritePokemons,
             getPokemonId,
+            getPokemonImage,
             toggleFavorite,
         };
     },
