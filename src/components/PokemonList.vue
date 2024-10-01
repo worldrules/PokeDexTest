@@ -5,9 +5,10 @@
     <div class="pokemon-list" v-if="paginatedPokemonList.length">
       <PokemonCard
         v-for="(pokemon, index) in paginatedPokemonList"
-        :key="pokemon.name"
+        :key="pokemon.id"
         :pokemon="pokemon"
         :pokemonId="getPokemonId(pokemon.url)"
+        @click="goToPokemonDetail(+getPokemonId(pokemon.url))"
       />
     </div>
 
@@ -24,16 +25,16 @@
 <script lang="ts">
 import { defineComponent, computed, onMounted, ref } from 'vue';
 import { usePokemon } from '@/composables/usePokemon';
+import { useRouter } from 'vue-router';
 import PokemonCard from './PokemonCard.vue';
 import PokemonFilter from './PokemonFilter.vue';
 
 export default defineComponent({
   components: { PokemonCard, PokemonFilter },
   setup() {
+    const router = useRouter();
     const {
-      pokemonList,
-      totalPokemon,
-      fetchPokemon,
+      pokemonList,      
       fetchAllPokemons,
       limit,
       offset,
@@ -61,6 +62,13 @@ export default defineComponent({
       const end = start + limit;
       return filteredPokemonList.value.slice(start, end);
     });
+    const goToPokemonDetail = (id: number) => {
+      router.push({ name: 'PokemonDetail', params: { id } });
+    };
+    const getPokemonId = (url: string) => {
+    const segments = url.split('/');
+    return segments[segments.length - 2];
+};
 
     const currentPage = computed(() => Math.floor(offset.value / limit) + 1);
     const hasMorePokemon = computed(() => offset.value + limit < filteredPokemonList.value.length);
@@ -85,11 +93,6 @@ export default defineComponent({
       loadInitialPokemons();
     });
 
-    const getPokemonId = (url: string) => {
-      const segments = url.split('/');
-      return segments[segments.length - 2];
-    };
-
     return {
       paginatedPokemonList,
       currentPage,
@@ -98,8 +101,9 @@ export default defineComponent({
       hasMorePokemon,
       getPokemonId,
       setSearchQuery,
-      pokemonList,
+      pokemonList,      
       offset,
+      goToPokemonDetail
     };
   },
 });

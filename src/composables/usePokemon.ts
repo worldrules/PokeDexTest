@@ -30,7 +30,7 @@ export function usePokemon() {
     };
     const fetchPokemonDetails = async (id: number) => {
         try {
-            const response = await axios.get(`${BASE_URL}/pokemon/${id}`);
+            const response = await axios.get(`${BASE_URL}/${id}`);
             return response.data;
         } catch (error) {
             console.error('Erro ao buscar detalhes do Pokémon:', error);

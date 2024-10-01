@@ -1,9 +1,9 @@
 <template>
-  <div class="pokemon-detail">
-    <h1>{{ capitalizeFirstLetter(pokemon.name) }} ({{ pokemon.id }})</h1>
+  <div v-if="pokemon && Object.keys(pokemon).length" class="pokemon-detail">
+    <h1>{{ capitalizeFirstLetter(pokemon?.name) }} ({{ pokemon?.id }})</h1>
 
     <div class="pokemon-types">
-      <span v-for="type in pokemon.types" :key="type.type.name" :class="['type', type.type.name]">
+      <span v-for="type in pokemon?.types" :key="type.type.name" :class="['type', type.type.name]">
         {{ capitalizeFirstLetter(type.type.name) }}
       </span>
     </div>
@@ -11,7 +11,7 @@
     <div class="pokemon-stats">
       <h2>Stats</h2>
       <ul>
-        <li v-for="stat in pokemon.stats" :key="stat.stat.name">
+        <li v-for="stat in pokemon?.stats" :key="stat.stat.name">
           <strong>{{ capitalizeFirstLetter(stat.stat.name) }}:</strong> {{ stat.base_stat }}
         </li>
       </ul>
@@ -19,7 +19,7 @@
 
     <div class="pokemon-evolutions">
       <h2>Evolutions</h2>
-      <div v-if="evolutionChain">
+      <div v-if="evolutionChain.length">
         <div v-for="evolution in evolutionChain" :key="evolution.id" class="evolution-stage">
           <img :src="getPokemonImageUrl(evolution.id)" alt="Imagem de evolução" />
           <span>{{ capitalizeFirstLetter(evolution.name) }}</span>
@@ -30,6 +30,9 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    <p>Carregando detalhes do Pokémon...</p>
+  </div>
 </template>
 
 <script lang="ts">
@@ -38,21 +41,22 @@ import { useRoute } from 'vue-router';
 import { usePokemon } from '@/composables/usePokemon';
 import { Ref } from 'vue';
 
-
-
 export default defineComponent({
   setup() {
     const route = useRoute();
-    const pokemon = ref(null);
+    const pokemon = ref({
+      id: '' as unknown as number,
+      name: '' as unknown as string,
+      stats: [] as { base_stat: number; stat: { name: string } }[],
+      types: [] as { type: { name: string } }[],
+});
     const evolutionChain: Ref<{ id: number; name: string }[]> = ref([]);
+    const loading = ref(true);
 
-    const {
-      fetchPokemonDetails,
-      fetchEvolutionChain,
-    } = usePokemon();
+    const { fetchPokemonDetails, fetchEvolutionChain } = usePokemon();
 
-
-    const capitalizeFirstLetter = (name: string) => {
+    const capitalizeFirstLetter = (name: string | undefined) => {
+      if (!name) return '';
       return name.charAt(0).toUpperCase() + name.slice(1);
     };
 
@@ -61,9 +65,15 @@ export default defineComponent({
     };
 
     const loadPokemonDetails = async () => {
-      const id = Number(route.params.id);
-      pokemon.value = await fetchPokemonDetails(id);
-      evolutionChain.value = await fetchEvolutionChain(id);
+      try {
+        const id = Number(route.params.id);
+        pokemon.value = await fetchPokemonDetails(id);
+        evolutionChain.value = await fetchEvolutionChain(id);
+      } catch (error) {
+        console.error("Erro ao carregar os detalhes do Pokémon:", error);
+      } finally {
+        loading.value = false;
+      }
     };
 
     onMounted(() => {
@@ -75,6 +85,7 @@ export default defineComponent({
       evolutionChain,
       capitalizeFirstLetter,
       getPokemonImageUrl,
+      loading,
     };
   },
 });
@@ -97,6 +108,7 @@ export default defineComponent({
   font-weight: bold;
   display: inline-block;
 }
+
 .type.fire { background-color: #f08030; }
 .type.water { background-color: #6890f0; }
 .type.grass { background-color: #78c850; }
