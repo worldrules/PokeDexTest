@@ -21,11 +21,15 @@
 
     <div class="pokemon-evolutions">
       <h2>Evolutions</h2>
-      <div v-if="evolutionChain.length > 0">
-        <div v-for="evolution in evolutionChain" :key="evolution.id" class="evolution-stage">
+      <div v-if="evolutionChain.length > 0" class="evolution-cards">
+        <router-link 
+          v-for="evolution in evolutionChain" 
+          :key="evolution.id" 
+          :to="{ name: 'PokemonDetail', params: { id: evolution.id } }" 
+          class="evolution-card">
           <img :src="getPokemonImageUrl(evolution.id)" alt="Imagem de evolução" />
           <span>{{ capitalizeFirstLetter(evolution.name) }}</span>
-        </div>
+        </router-link>
       </div>
       <div v-else>
         <p>Este Pokémon não evolui.</p>
@@ -38,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePokemon } from '@/composables/usePokemon';
 
@@ -103,6 +107,12 @@ export default defineComponent({
       loadPokemonDetails();
     });
 
+    
+    watch(() => route.params.id, (newId) => {
+      loading.value = true;
+      loadPokemonDetails();
+    });
+
     return {
       pokemon,
       evolutionChain,
@@ -151,14 +161,30 @@ export default defineComponent({
   margin-top: 20px;
 }
 
-.evolution-stage {
-  display: inline-block;
-  margin: 10px;
-  text-align: center;
+.evolution-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.evolution-stage img {
-  width: 100px;
-  height: 100px;
+.evolution-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+  transition: box-shadow 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.evolution-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.evolution-card img {
+  width: 80px;
+  height: 80px;
 }
 </style>
