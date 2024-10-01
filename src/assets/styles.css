@@ -15,25 +15,39 @@ body {
     min-height: 100vh;
     margin: 0;
     transition: background 0.2s linear;
-}
-
-.theme-language-container span {
     color: black;
 }
 
-body.dark .theme-language-container span {
+body.dark {
+    background-color: #292c35;
+    color: black;
+}
+
+body.dark li {
+    background-color: #292c35;
     color: white;
 }
 
-
-body.dark {
+body.dark span {
     background-color: #292c35;
+    color: white;
+}
+
+body.dark h1 {
+    background-color: #292c35;
+    color: white;
+}
+
+.theme-language-container span {
+    color: inherit;
 }
 
 body.dark h1,
 body.dark p,
-body.dark button {
-    color: #fff;
+body.dark button,
+body.dark h2,
+body.dark h2 span {
+    color: inherit;
 }
 
 .theme {
