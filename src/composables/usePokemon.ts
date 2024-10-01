@@ -39,12 +39,13 @@ export function usePokemon() {
     };
     const fetchEvolutionChain = async (id: number) => {
         try {
-            const speciesResponse = await axios.get(`${BASE_URL}/pokemon-species/${id}`);
+            const speciesResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
             const evolutionUrl = speciesResponse.data.evolution_chain.url;
             const evolutionResponse = await axios.get(evolutionUrl);
 
             const evolutionChain = [];
             let evolutionData = evolutionResponse.data.chain;
+            console.log(evolutionData)
 
             do {
                 const idFromUrl = evolutionData.species.url.split('/').slice(-2, -1)[0];

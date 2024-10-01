@@ -1,7 +1,7 @@
 <template>
   <div v-if="pokemon" class="pokemon-detail">
     <h1>{{ capitalizeFirstLetter(pokemon?.name) }} ({{ pokemon?.id }})</h1>
-    
+
     <img :src="getPokemonImageUrl(pokemon.id)" alt="Imagem do Pokémon" class="pokemon-image" />
 
     <div class="pokemon-types">
@@ -21,7 +21,7 @@
 
     <div class="pokemon-evolutions">
       <h2>Evolutions</h2>
-      <div v-if="evolutionChain.length">
+      <div v-if="evolutionChain.length > 0">
         <div v-for="evolution in evolutionChain" :key="evolution.id" class="evolution-stage">
           <img :src="getPokemonImageUrl(evolution.id)" alt="Imagem de evolução" />
           <span>{{ capitalizeFirstLetter(evolution.name) }}</span>
@@ -55,6 +55,11 @@ interface Type {
   };
 }
 
+interface Evolution {
+  id: number;
+  name: string;
+}
+
 interface Pokemon {
   id: number;
   name: string;
@@ -66,7 +71,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const pokemon = ref<Pokemon | null>(null);
-    const evolutionChain = ref<{ id: number; name: string }[]>([]);
+    const evolutionChain = ref<Evolution[]>([]);
     const loading = ref(true);
 
     const { fetchPokemonDetails, fetchEvolutionChain } = usePokemon();
@@ -84,7 +89,9 @@ export default defineComponent({
       try {
         const id = Number(route.params.id);
         pokemon.value = await fetchPokemonDetails(id);
-        evolutionChain.value = await fetchEvolutionChain(id);
+        if (pokemon.value) {
+          evolutionChain.value = await fetchEvolutionChain(id);
+        }
       } catch (error) {
         console.error("Erro ao carregar os detalhes do Pokémon:", error);
       } finally {
