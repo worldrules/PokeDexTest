@@ -4,7 +4,7 @@
 
     <div class="pokemon-list" v-if="paginatedPokemonList.length">
       <PokemonCard
-        v-for="(pokemon, index) in paginatedPokemonList"
+        v-for="pokemon in paginatedPokemonList"
         :key="pokemon.id"
         :pokemon="pokemon"
         :pokemonId="getPokemonId(pokemon.url)"
@@ -18,7 +18,9 @@
       <button @click="nextPage" :disabled="!hasMorePokemon">Próxima</button>
     </div>
 
-    <div v-if="!paginatedPokemonList.length && pokemonList.length" class="no-results">Nenhum Pokémon encontrado.</div>
+    <div v-if="!paginatedPokemonList.length && pokemonList.length" class="no-results">
+      Nenhum Pokémon encontrado.
+    </div>
   </div>
 </template>
 
@@ -33,28 +35,31 @@ export default defineComponent({
   components: { PokemonCard, PokemonFilter },
   setup() {
     const router = useRouter();
-    const {
-      pokemonList,      
-      fetchAllPokemons,
-      limit,
-      offset,
-    } = usePokemon();
+    const { pokemonList, fetchAllPokemons, limit, offset } = usePokemon();
 
     const searchQuery = ref('');
 
     const setSearchQuery = (query: string) => {
-      searchQuery.value = query.toLowerCase();
+      searchQuery.value = typeof query === 'string' ? query.trim() : '';
       offset.value = 0;
       fetchAllPokemons();
     };
 
     const filteredPokemonList = computed(() => {
-      if (!searchQuery.value.trim()) {
+
+      if (!searchQuery.value) {
         return pokemonList.value;
       }
-      return pokemonList.value.filter(pokemon =>
-        pokemon.name.toLowerCase().includes(searchQuery.value)
-      );
+
+      const queryAsNumber = Number(searchQuery.value);
+
+      return pokemonList.value.filter(pokemon => {
+        if (!isNaN(queryAsNumber) && queryAsNumber > 0) { 
+          return pokemon.id === queryAsNumber;
+        }
+        
+        return pokemon.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+      });
     });
 
     const paginatedPokemonList = computed(() => {
@@ -62,13 +67,15 @@ export default defineComponent({
       const end = start + limit;
       return filteredPokemonList.value.slice(start, end);
     });
+
     const goToPokemonDetail = (id: number) => {
       router.push({ name: 'PokemonDetail', params: { id } });
     };
+
     const getPokemonId = (url: string) => {
-    const segments = url.split('/');
-    return segments[segments.length - 2];
-};
+      const segments = url.split('/');
+      return segments[segments.length - 2];
+    };
 
     const currentPage = computed(() => Math.floor(offset.value / limit) + 1);
     const hasMorePokemon = computed(() => offset.value + limit < filteredPokemonList.value.length);
@@ -101,9 +108,9 @@ export default defineComponent({
       hasMorePokemon,
       getPokemonId,
       setSearchQuery,
-      pokemonList,      
+      pokemonList,
       offset,
-      goToPokemonDetail
+      goToPokemonDetail,
     };
   },
 });

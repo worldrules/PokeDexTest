@@ -12,7 +12,11 @@ export function usePokemon() {
     const fetchPokemon = async (offsetValue: number = 0) => {
         try {
             const response = await axios.get(`${BASE_URL}?limit=${limit}&offset=${offsetValue}`);
-            pokemonList.value = response.data.results;
+            pokemonList.value = response.data.results.map((pokemon: any, index: number) => ({
+                id: offsetValue + index + 1,
+                name: pokemon.name,
+                url: pokemon.url
+            }));
             totalPokemon.value = response.data.count;
         } catch (error) {
             console.error('Erro ao buscar Pokémon:', error);
@@ -22,12 +26,17 @@ export function usePokemon() {
     const fetchAllPokemons = async () => {
         try {
             const response = await axios.get(`${BASE_URL}?limit=10000`);
-            pokemonList.value = response.data.results;
+            pokemonList.value = response.data.results.map((pokemon: any, index: number) => ({
+                id: index + 1,
+                name: pokemon.name,
+                url: pokemon.url
+            }));
             totalPokemon.value = response.data.count;
         } catch (error) {
             console.error('Erro ao buscar todos os Pokémon:', error);
         }
     };
+
     const fetchPokemonDetails = async (id: number) => {
         try {
             const response = await axios.get(`${BASE_URL}/${id}`);
@@ -37,6 +46,7 @@ export function usePokemon() {
             return null;
         }
     };
+
     const fetchEvolutionChain = async (id: number) => {
         try {
             const speciesResponse = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
@@ -45,7 +55,6 @@ export function usePokemon() {
 
             const evolutionChain = [];
             let evolutionData = evolutionResponse.data.chain;
-            console.log(evolutionData)
 
             do {
                 const idFromUrl = evolutionData.species.url.split('/').slice(-2, -1)[0];
