@@ -15,7 +15,6 @@
         <option value="es">Español</option>
       </select>
     </div>
-    <h1>{{ $t('welcome') }}</h1>
     <router-view />
   </div>
 </template>

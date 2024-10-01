@@ -1,5 +1,6 @@
 <template>
     <div>
+        <button @click="goBack" class="back-button">Voltar</button>
         <h1>Pokémon Favoritos</h1>
         <div class="pokemon-list" v-if="favoritePokemons.length">
             <PokemonCard v-for="(pokemon, index) in favoritePokemons" :key="index" :pokemon="pokemon"
@@ -44,10 +45,13 @@ export default defineComponent({
             if (index !== -1) {
                 currentFavorites.splice(index, 1);
             } else {
-
             }
             localStorage.setItem('favoritePokemons', JSON.stringify(currentFavorites));
             favoritePokemons.value = currentFavorites;
+        };
+
+        const goBack = () => {
+            window.history.back();
         };
 
         return {
@@ -55,6 +59,7 @@ export default defineComponent({
             getPokemonId,
             getPokemonImage,
             toggleFavorite,
+            goBack, // Adicionando goBack ao retorno
         };
     },
 });
@@ -71,5 +76,22 @@ export default defineComponent({
     margin-top: 20px;
     font-size: 18px;
     color: red;
+}
+
+.back-button {
+    background-color: #f08030;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    background-color: #d86f27;
+    transform: scale(1.05);
 }
 </style>

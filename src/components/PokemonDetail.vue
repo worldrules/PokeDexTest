@@ -14,8 +14,12 @@
     <div class="pokemon-stats">
       <h2>Stats</h2>
       <ul>
-        <li v-for="stat in pokemon?.stats" :key="stat.stat.name">
-          <strong>{{ capitalizeFirstLetter(stat.stat.name) }}:</strong> {{ stat.base_stat }}
+        <li v-for="stat in pokemon?.stats" :key="stat.stat.name" class="stat">
+          <strong>{{ capitalizeFirstLetter(stat.stat.name) }}:</strong>
+          <div class="stat-bar">
+            <div class="stat-fill" :style="{ width: isAnimating ? '0%' : `${stat.base_stat}%` }"></div>
+          </div>
+          <span class="stat-value">{{ stat.base_stat }}</span>
         </li>
       </ul>
     </div>
@@ -38,6 +42,8 @@
     <p>Carregando detalhes do Pokémon...</p>
   </div>
 </template>
+
+
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from 'vue';
@@ -75,6 +81,7 @@ export default defineComponent({
     const pokemon = ref<Pokemon | null>(null);
     const evolutionChain = ref<Evolution[]>([]);
     const loading = ref(true);
+    const isAnimating = ref(false);
 
     const { fetchPokemonDetails, fetchEvolutionChain } = usePokemon();
 
@@ -98,11 +105,16 @@ export default defineComponent({
         console.error("Erro ao carregar os detalhes do Pokémon:", error);
       } finally {
         loading.value = false;
+        isAnimating.value = true;
+        setTimeout(() => {
+          isAnimating.value = false;
+        }, 10);
       }
     };
 
     onMounted(() => {
       loadPokemonDetails();
+
     });
 
     watch(() => route.params.id, (newId) => {
@@ -116,10 +128,12 @@ export default defineComponent({
       capitalizeFirstLetter,
       getPokemonImageUrl,
       loading,
+      isAnimating,
     };
   },
 });
 </script>
+
 
 <style scoped>
 .pokemon-detail {
@@ -242,6 +256,38 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.pokemon-stats {
+  margin-top: 20px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.stat-bar {
+  flex: 1;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  height: 20px;
+  margin: 0 10px;
+  position: relative;
+}
+
+.stat-fill {
+  background-color: #4caf50;
+  height: 100%;
+  border-radius: 5px;
+  transition: width 1s ease-in-out;
+  width: 0%;
+}
+
+.stat-value {
+  width: 40px;
+  text-align: right;
 }
 
 .evolution-card {
