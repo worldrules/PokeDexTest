@@ -4,7 +4,8 @@
 
     <div class="pokemon-list" v-if="paginatedPokemonList.length">
       <PokemonCard v-for="pokemon in paginatedPokemonList" :key="pokemon.id" :pokemon="pokemon"
-        :pokemonId="getPokemonId(pokemon.url)" @click="goToPokemonDetail(+getPokemonId(pokemon.url))" />
+        :pokemonId="getPokemonId(pokemon.url)" @click="goToPokemonDetail(+getPokemonId(pokemon.url))"
+        :is-favorite="favoritePokemons.includes(pokemon.id)" @toggle-favorite="toggleFavorite(pokemon.id)" />
     </div>
 
     <div class="pagination" v-if="paginatedPokemonList.length">
@@ -20,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, ref } from 'vue';
+import { defineComponent, computed, onMounted, ref, watch } from 'vue';
 import { usePokemon } from '@/composables/usePokemon';
 import { useRouter } from 'vue-router';
 import PokemonCard from './PokemonCard.vue';
@@ -33,7 +34,25 @@ export default defineComponent({
     const { pokemonList, fetchAllPokemons, limit, offset } = usePokemon();
 
     const searchQuery = ref('');
-    const typeFilter = ref('');
+    const selectedTypes = ref<string[]>([]);
+    const favoritePokemons = ref<number[]>([]);
+
+    const loadFavorites = () => {
+      const storedFavorites = localStorage.getItem('favoritePokemons');
+      if (storedFavorites) {
+        favoritePokemons.value = JSON.parse(storedFavorites);
+      }
+    };
+
+    const toggleFavorite = (pokemonId: number) => {
+      const index = favoritePokemons.value.indexOf(pokemonId);
+      if (index > -1) {
+        favoritePokemons.value.splice(index, 1);
+      } else {
+        favoritePokemons.value.push(pokemonId);
+      }
+      localStorage.setItem('favoritePokemons', JSON.stringify(favoritePokemons.value));
+    };
 
     const setSearchQuery = (query: string) => {
       searchQuery.value = typeof query === 'string' ? query.trim() : '';
@@ -41,10 +60,11 @@ export default defineComponent({
       fetchAllPokemons();
     };
 
-    const setTypeFilter = (type: string) => {
-      typeFilter.value = type;
+    const setTypeFilter = (types: string[]) => {
+      selectedTypes.value = types;
       searchQuery.value = '';
       offset.value = 0;
+      console.log('Tipos selecionados:', selectedTypes.value);
       fetchAllPokemons();
     };
 
@@ -61,9 +81,9 @@ export default defineComponent({
         });
       }
 
-      if (typeFilter.value) {
-        return filteredList.filter(pokemon =>
-          pokemon.types.some((type: { type: { name: string; }; }) => type.type.name === typeFilter.value)
+      if (selectedTypes.value.length > 0) {
+        filteredList = filteredList.filter(pokemon =>
+          pokemon.types.some((type: { type: { name: string; }; }) => selectedTypes.value.includes(type.type.name))
         );
       }
 
@@ -102,10 +122,16 @@ export default defineComponent({
 
     const loadInitialPokemons = async () => {
       await fetchAllPokemons();
+      loadFavorites();
     };
 
     onMounted(() => {
       loadInitialPokemons();
+    });
+
+    watch(selectedTypes, (newTypes) => {
+      console.log('Tipos selecionados:', newTypes);
+      offset.value = 0;
     });
 
     return {
@@ -120,10 +146,14 @@ export default defineComponent({
       pokemonList,
       offset,
       goToPokemonDetail,
+      selectedTypes,
+      favoritePokemons,
+      toggleFavorite,
     };
   },
 });
 </script>
+
 
 <style scoped>
 .pokemon-list-container {

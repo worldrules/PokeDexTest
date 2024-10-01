@@ -1,5 +1,6 @@
 <template>
   <div v-if="pokemon" class="pokemon-detail">
+    <button @click="$router.push('/')" class="back-button">Voltar</button>
     <h1>{{ capitalizeFirstLetter(pokemon?.name) }} ({{ pokemon?.id }})</h1>
 
     <img :src="getPokemonImageUrl(pokemon.id)" alt="Imagem do Pokémon" class="pokemon-image" />
@@ -104,7 +105,6 @@ export default defineComponent({
       loadPokemonDetails();
     });
 
-
     watch(() => route.params.id, (newId) => {
       loading.value = true;
       loadPokemonDetails();
@@ -124,6 +124,23 @@ export default defineComponent({
 <style scoped>
 .pokemon-detail {
   text-align: center;
+}
+
+.back-button {
+  background-color: #f08030;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  margin-bottom: 20px;
+}
+
+.back-button:hover {
+  background-color: #d86f27;
+  transform: scale(1.05);
 }
 
 .pokemon-image {

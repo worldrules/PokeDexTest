@@ -48,8 +48,9 @@ export default defineComponent({
     };
 
     const toggleTypeFilter = (type: string) => {
-      if (selectedTypes.value.includes(type)) {
-        selectedTypes.value = selectedTypes.value.filter(t => t !== type);
+      const index = selectedTypes.value.indexOf(type);
+      if (index > -1) {
+        selectedTypes.value.splice(index, 1);
       } else {
         selectedTypes.value.push(type);
       }

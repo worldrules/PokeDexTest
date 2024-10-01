@@ -4,6 +4,8 @@ import i18n from './i18n';
 import router from './routes.ts';
 import './assets/styles.css';
 import './style.css'
+import '@fortawesome/fontawesome-free/css/all.css';
+
 
 const app = createApp(App);
 
