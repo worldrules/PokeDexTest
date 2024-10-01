@@ -1,12 +1,12 @@
 <template>
-  <div class="pokemon-card">
+  <router-link :to="{ name: 'PokemonDetail', params: { id: pokemonId } }" class="pokemon-card">
     <img :src="pokemonImage" :alt="pokemon.name" class="pokemon-image" />
     <h2 class="pokemon-name">{{ pokemonId }} - {{ pokemon.name }}</h2>
     <button @click.stop="toggleFavorite">
       <i :class="['fas', isFavorite ? 'fa-star' : 'fa-star-half-alt']"></i>
       {{ isFavorite ? ' Remover dos Favoritos' : ' Adicionar aos Favoritos' }}
     </button>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
@@ -48,6 +48,15 @@ export default defineComponent({
   border-radius: 10px;
   text-align: center;
   background-color: #f5f5f5;
+  text-decoration: none;
+  /* Remove underline from link */
+  color: inherit;
+  /* Inherit color from parent */
+}
+
+.pokemon-card:hover {
+  background-color: #e0e0e0;
+  /* Change background on hover */
 }
 
 .pokemon-image {
