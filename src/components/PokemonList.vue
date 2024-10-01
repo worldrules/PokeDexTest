@@ -170,6 +170,7 @@ export default defineComponent({
 <style scoped>
 .pokemon-list-container {
   text-align: center;
+  background-color: #fef68a;
 }
 
 .pokemon-list {

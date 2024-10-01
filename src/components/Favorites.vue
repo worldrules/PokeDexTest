@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class="favorites-container">
         <button @click="goBack" class="back-button">{{ $t('voltar') }}</button>
         <h1>{{ $t('favorites') }}</h1>
         <div class="pokemon-list" v-if="favoritePokemons.length">
-            <PokemonCard v-for="(pokemon, index) in favoritePokemons" :key="index" :pokemon="pokemon"
+            <PokemonCard class="pokemon" v-for="(pokemon, index) in favoritePokemons" :key="index" :pokemon="pokemon"
                 :pokemonId="getPokemonId(pokemon.url)" :pokemonImage="getPokemonImage(pokemon.url)" :isFavorite="true"
                 @toggle-favorite="toggleFavorite" />
         </div>
@@ -87,6 +87,15 @@ export default defineComponent({
     margin-top: 20px;
     font-size: 18px;
     color: red;
+}
+
+.pokemon {
+    margin-bottom: 20px;
+    margin-left: 1vh;
+}
+
+.favorites-container {
+    background-color: #fef68a;
 }
 
 .back-button {

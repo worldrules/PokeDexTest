@@ -150,6 +150,7 @@ export default defineComponent({
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
   margin-bottom: 20px;
+  margin-top: 2vh;
 }
 
 .back-button:hover {

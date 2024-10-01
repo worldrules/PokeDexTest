@@ -1,6 +1,6 @@
 <template>
   <div class="filter-container">
-    <input v-model="searchQuery" @input="emitSearch" :placeholder="$t('search_placeholder')" />
+    <input class="searchTerm" v-model="searchQuery" @input="emitSearch" :placeholder="$t('search_placeholder')" />
 
     <div class="type-filter">
       <button v-for="(color, type) in pokemonTypeColors" :key="type" :class="{ active: selectedTypes.includes(type) }"
@@ -77,6 +77,10 @@ export default defineComponent({
 input {
   padding: 10px;
   font-size: 16px;
+}
+
+.search {
+  margin-top: 10px;
 }
 
 .type-filter {
