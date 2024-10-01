@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>Pokédex</h1>
+    <img src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" alt="PokeAPI Logo"
+      class="pokedex-logo" />
     <PokemonList />
   </div>
 </template>
@@ -43,5 +44,21 @@ h1 {
 
 .favorites-button:hover {
   background-color: #e6b800;
+}
+
+.pokedex-logo {
+  animation: bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 </style>
