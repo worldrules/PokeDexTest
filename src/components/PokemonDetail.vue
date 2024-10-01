@@ -22,11 +22,8 @@
     <div class="pokemon-evolutions">
       <h2>Evolutions</h2>
       <div v-if="evolutionChain.length > 0" class="evolution-cards">
-        <router-link 
-          v-for="evolution in evolutionChain" 
-          :key="evolution.id" 
-          :to="{ name: 'PokemonDetail', params: { id: evolution.id } }" 
-          class="evolution-card">
+        <router-link v-for="evolution in evolutionChain" :key="evolution.id"
+          :to="{ name: 'PokemonDetail', params: { id: evolution.id } }" class="evolution-card">
           <img :src="getPokemonImageUrl(evolution.id)" alt="Imagem de evolução" />
           <span>{{ capitalizeFirstLetter(evolution.name) }}</span>
         </router-link>
@@ -107,7 +104,7 @@ export default defineComponent({
       loadPokemonDetails();
     });
 
-    
+
     watch(() => route.params.id, (newId) => {
       loading.value = true;
       loadPokemonDetails();
@@ -148,10 +145,73 @@ export default defineComponent({
   display: inline-block;
 }
 
-.type.fire { background-color: #f08030; }
-.type.water { background-color: #6890f0; }
-.type.grass { background-color: #78c850; }
-.type.electric { background-color: #f8d030; }
+.type.bug {
+  background-color: #a8b820;
+}
+
+.type.dark {
+  background-color: #705848;
+}
+
+.type.dragon {
+  background-color: #7038f8;
+}
+
+.type.electric {
+  background-color: #f8d030;
+}
+
+.type.fairy {
+  background-color: #ee99ee;
+}
+
+.type.fighting {
+  background-color: #c03028;
+}
+
+.type.fire {
+  background-color: #f08030;
+}
+
+.type.flying {
+  background-color: #a890f0;
+}
+
+.type.ghost {
+  background-color: #705898;
+}
+
+.type.grass {
+  background-color: #78c850;
+}
+
+.type ground {
+  background-color: #e0c068;
+}
+
+.type.ice {
+  background-color: #98d8d8;
+}
+
+.type.normal {
+  background-color: #a8a878;
+}
+
+.type.poison {
+  background-color: #a040a0;
+}
+
+.type.psychic {
+  background-color: #f85888;
+}
+
+.type.rock {
+  background-color: #b8a038;
+}
+
+.type.water {
+  background-color: #6890f0;
+}
 
 .pokemon-stats {
   margin-top: 20px;
