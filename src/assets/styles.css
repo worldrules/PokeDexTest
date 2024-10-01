@@ -4,6 +4,17 @@
     box-sizing: border-box;
 }
 
+.navbar-button {
+    background-color: steelblue
+}
+
+.language-select {
+    background-color: steelblue;
+    color: white;
+    font-family: "Montserrat", sans-serif !important;
+    font-size: 16px;
+}
+
 body {
     font-family: "Montserrat", sans-serif;
     background-color: #fff;

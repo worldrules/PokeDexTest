@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button @click="goToFavorites" class="favorites-button">Favoritos</button>
     <h1>Pokédex</h1>
     <PokemonList />
   </div>
@@ -18,12 +17,9 @@ export default defineComponent({
   setup() {
     const router = useRouter();
 
-    const goToFavorites = () => {
-      router.push('/favorites');
-    };
+
 
     return {
-      goToFavorites,
     };
   },
 });

@@ -34,12 +34,12 @@
         </router-link>
       </div>
       <div v-else>
-        <p>Este Pokémon não evolui.</p>
+        <p>{{ $t('nevolui') }}</p>
       </div>
     </div>
   </div>
   <div v-else>
-    <p>Carregando detalhes do Pokémon...</p>
+    <p>{{ $t('carregando') }}</p>
   </div>
 </template>
 

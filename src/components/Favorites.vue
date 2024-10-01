@@ -1,14 +1,14 @@
 <template>
     <div>
-        <button @click="goBack" class="back-button">Voltar</button>
-        <h1>Pokémon Favoritos</h1>
+        <button @click="goBack" class="back-button">{{ $t('voltar') }}</button>
+        <h1>{{ $t('favorites') }}</h1>
         <div class="pokemon-list" v-if="favoritePokemons.length">
             <PokemonCard v-for="(pokemon, index) in favoritePokemons" :key="index" :pokemon="pokemon"
                 :pokemonId="getPokemonId(pokemon.url)" :pokemonImage="getPokemonImage(pokemon.url)" :isFavorite="true"
                 @toggle-favorite="toggleFavorite" />
         </div>
         <div v-else class="no-results">
-            Nenhum Pokémon favorito encontrado.
+            {{ $t('nenhum') }}
         </div>
     </div>
 </template>
@@ -16,12 +16,16 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import PokemonCard from '@/components/PokemonCard.vue';
+import { useI18n } from 'vue-i18n';
+
 
 export default defineComponent({
     components: {
         PokemonCard,
     },
     setup() {
+        const { locale } = useI18n();
+        const currentLanguage = ref(locale.value);
         const favoritePokemons = ref(
             JSON.parse(localStorage.getItem('favoritePokemons') || '[]')
         );
@@ -35,6 +39,11 @@ export default defineComponent({
         const getPokemonImage = (url: string) => {
             const id = getPokemonId(url);
             return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+        };
+        const changeLanguage = (event: Event) => {
+            const target = event.target as HTMLSelectElement;
+            locale.value = target.value;
+            currentLanguage.value = target.value;
         };
 
         const toggleFavorite = (id: string) => {
@@ -59,7 +68,9 @@ export default defineComponent({
             getPokemonId,
             getPokemonImage,
             toggleFavorite,
-            goBack, // Adicionando goBack ao retorno
+            goBack,
+            currentLanguage,
+            changeLanguage,
         };
     },
 });
@@ -88,6 +99,7 @@ export default defineComponent({
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .back-button:hover {

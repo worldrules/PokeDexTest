@@ -10,13 +10,13 @@
     </div>
 
     <div class="pagination" v-if="paginatedPokemonList.length">
-      <button @click="prevPage" :disabled="offset === 0">Anterior</button>
+      <button @click="prevPage" :disabled="offset === 0">{{ $t('anterior') }}</button>
       <span>Página {{ currentPage }}</span>
-      <button @click="nextPage" :disabled="!hasMorePokemon">Próxima</button>
+      <button @click="nextPage" :disabled="!hasMorePokemon">{{ $t('proxima') }}</button>
     </div>
 
     <div v-if="!paginatedPokemonList.length && pokemonList.length" class="no-results">
-      Nenhum Pokémon encontrado.
+      {{ $t('nenhum') }}
     </div>
   </div>
 </template>

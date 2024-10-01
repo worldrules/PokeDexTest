@@ -3,6 +3,16 @@
   "toggle_theme": "Toggle Theme",
   "pokemon": "Pokémon",
   "search": "Search",
-  "search_placeholder": "Search for a Pokémon"
+  "search_placeholder": "Search for a Pokémon",
+  "favorites": "Favorites",
+
+  "voltar": "Back",
+
+  "nenhum": "No pokemon found...",
+  "anterior": "Previous",
+  "proxima": "Next",
+  "nevolui": "No evolution found...",
+  "carregando": "Loading..."
+
 
 }
