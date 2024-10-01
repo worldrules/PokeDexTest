@@ -18,6 +18,10 @@ body {
     color: black;
 }
 
+.fa-star::before {
+    color: gold;
+}
+
 body.dark {
     background-color: #292c35;
     color: black;

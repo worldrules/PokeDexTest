@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from './views/HomeView.vue';
 import PokemonDetail from './components/PokemonDetail.vue';
+import Favorites from './components/Favorites.vue';
 
 
 const routes = [
@@ -15,6 +16,11 @@ const routes = [
         name: 'PokemonDetail',
         component: PokemonDetail,
         props: true,
+    },
+    {
+        path: '/favorites',
+        name: 'Favorites',
+        component: Favorites,
     },
 ];
 
