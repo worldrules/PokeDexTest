@@ -1,7 +1,7 @@
 <template>
   <div class="pokemon-card">
     <img :src="pokemonImage" :alt="pokemon.name" class="pokemon-image" />
-    <h3>{{ pokemonId }} - {{ pokemon.name }}</h3>
+    <h2 class="pokemon-name">{{ pokemonId }} - {{ pokemon.name }}</h2>
   </div>
 </template>
 
@@ -40,5 +40,8 @@ export default defineComponent({
   width: 150px;
   height: 150px;
   object-fit: contain;
+}
+.pokemon-name {
+  text-transform: capitalize;
 }
 </style>
