@@ -1,6 +1,8 @@
 <template>
-  <div v-if="pokemon && Object.keys(pokemon).length" class="pokemon-detail">
+  <div v-if="pokemon" class="pokemon-detail">
     <h1>{{ capitalizeFirstLetter(pokemon?.name) }} ({{ pokemon?.id }})</h1>
+    
+    <img :src="getPokemonImageUrl(pokemon.id)" alt="Imagem do Pokémon" class="pokemon-image" />
 
     <div class="pokemon-types">
       <span v-for="type in pokemon?.types" :key="type.type.name" :class="['type', type.type.name]">
@@ -39,18 +41,32 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePokemon } from '@/composables/usePokemon';
-import { Ref } from 'vue';
+
+interface Stat {
+  base_stat: number;
+  stat: {
+    name: string;
+  };
+}
+
+interface Type {
+  type: {
+    name: string;
+  };
+}
+
+interface Pokemon {
+  id: number;
+  name: string;
+  types: Type[];
+  stats: Stat[];
+}
 
 export default defineComponent({
   setup() {
     const route = useRoute();
-    const pokemon = ref({
-      id: '' as unknown as number,
-      name: '' as unknown as string,
-      stats: [] as { base_stat: number; stat: { name: string } }[],
-      types: [] as { type: { name: string } }[],
-});
-    const evolutionChain: Ref<{ id: number; name: string }[]> = ref([]);
+    const pokemon = ref<Pokemon | null>(null);
+    const evolutionChain = ref<{ id: number; name: string }[]>([]);
     const loading = ref(true);
 
     const { fetchPokemonDetails, fetchEvolutionChain } = usePokemon();
@@ -94,6 +110,12 @@ export default defineComponent({
 <style scoped>
 .pokemon-detail {
   text-align: center;
+}
+
+.pokemon-image {
+  width: 150px;
+  height: 150px;
+  margin: 20px 0;
 }
 
 .pokemon-types {
