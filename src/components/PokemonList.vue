@@ -1,15 +1,10 @@
 <template>
   <div class="pokemon-list-container">
-    <PokemonFilter @update:search="setSearchQuery" />
+    <PokemonFilter @update:search="setSearchQuery" @update:type="setTypeFilter" />
 
     <div class="pokemon-list" v-if="paginatedPokemonList.length">
-      <PokemonCard
-        v-for="pokemon in paginatedPokemonList"
-        :key="pokemon.id"
-        :pokemon="pokemon"
-        :pokemonId="getPokemonId(pokemon.url)"
-        @click="goToPokemonDetail(+getPokemonId(pokemon.url))"
-      />
+      <PokemonCard v-for="pokemon in paginatedPokemonList" :key="pokemon.id" :pokemon="pokemon"
+        :pokemonId="getPokemonId(pokemon.url)" @click="goToPokemonDetail(+getPokemonId(pokemon.url))" />
     </div>
 
     <div class="pagination" v-if="paginatedPokemonList.length">
@@ -38,6 +33,7 @@ export default defineComponent({
     const { pokemonList, fetchAllPokemons, limit, offset } = usePokemon();
 
     const searchQuery = ref('');
+    const typeFilter = ref('');
 
     const setSearchQuery = (query: string) => {
       searchQuery.value = typeof query === 'string' ? query.trim() : '';
@@ -45,21 +41,33 @@ export default defineComponent({
       fetchAllPokemons();
     };
 
-    const filteredPokemonList = computed(() => {
+    const setTypeFilter = (type: string) => {
+      typeFilter.value = type;
+      searchQuery.value = '';
+      offset.value = 0;
+      fetchAllPokemons();
+    };
 
-      if (!searchQuery.value) {
-        return pokemonList.value;
+    const filteredPokemonList = computed(() => {
+      let filteredList = pokemonList.value;
+
+      if (searchQuery.value) {
+        const queryAsNumber = Number(searchQuery.value);
+        filteredList = filteredList.filter(pokemon => {
+          if (!isNaN(queryAsNumber) && queryAsNumber > 0) {
+            return pokemon.id === queryAsNumber;
+          }
+          return pokemon.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+        });
       }
 
-      const queryAsNumber = Number(searchQuery.value);
+      if (typeFilter.value) {
+        return filteredList.filter(pokemon =>
+          pokemon.types.some((type: { type: { name: string; }; }) => type.type.name === typeFilter.value)
+        );
+      }
 
-      return pokemonList.value.filter(pokemon => {
-        if (!isNaN(queryAsNumber) && queryAsNumber > 0) { 
-          return pokemon.id === queryAsNumber;
-        }
-        
-        return pokemon.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-      });
+      return filteredList;
     });
 
     const paginatedPokemonList = computed(() => {
@@ -108,6 +116,7 @@ export default defineComponent({
       hasMorePokemon,
       getPokemonId,
       setSearchQuery,
+      setTypeFilter,
       pokemonList,
       offset,
       goToPokemonDetail,
@@ -120,19 +129,23 @@ export default defineComponent({
 .pokemon-list-container {
   text-align: center;
 }
+
 .pokemon-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
 }
+
 .pagination {
   margin-top: 20px;
 }
+
 .no-results {
   margin-top: 20px;
   font-size: 18px;
   color: red;
 }
+
 button {
   padding: 10px;
   margin: 5px;

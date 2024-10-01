@@ -9,14 +9,14 @@
       </button>
     </div>
 
-    <div class="selected-types">
-      <span v-if="selectedTypes.length">Tipos selecionados: {{ selectedTypes.join(', ') }}</span>
+    <div class="selected-types" v-if="selectedTypes.length">
+      Tipos selecionados: {{ selectedTypes.join(', ') }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   setup(_, { emit }) {
