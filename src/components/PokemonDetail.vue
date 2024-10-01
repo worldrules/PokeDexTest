@@ -97,6 +97,10 @@ export default defineComponent({
   font-weight: bold;
   display: inline-block;
 }
+.type.fire { background-color: #f08030; }
+.type.water { background-color: #6890f0; }
+.type.grass { background-color: #78c850; }
+.type.electric { background-color: #f8d030; }
 
 .pokemon-stats {
   margin-top: 20px;

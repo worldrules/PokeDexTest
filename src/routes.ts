@@ -1,6 +1,7 @@
 // @ts-ignore
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from './views/HomeView.vue';
+import PokemonDetail from './components/PokemonDetail.vue';
 
 
 const routes = [
@@ -8,6 +9,12 @@ const routes = [
         path: '/',
         name: 'Home',
         component: HomeView,
+    },
+    {
+        path: '/pokemon/:id',
+        name: 'PokemonDetail',
+        component: PokemonDetail,
+        props: true,
     },
 ];
 
