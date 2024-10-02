@@ -27,7 +27,8 @@ Teste Técnico – Desenvolvedor(a) Front-end – 09/2024
 
 
 ## Demonstração
-
+## Link para a aplicação com Deployment feito na Vercel: 
+[![link](https://img.shields.io/badge/link-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://poke-dex-test-mqbh.vercel.app/)
 
 
 ![](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2lpZGhuMG56OWN6aDd1dHc2YTRvb24zeTJzeWN3MXdhaHRrNXN1ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/AvYf7wiwP3iY0CQEWV/giphy.gif)
@@ -56,7 +57,7 @@ Após clonar o projeto no link abaixo. NPM install, para instalar as dependênci
 Para rodar o projeto dentro da pasta NPM RUN DEV.
 Para rodar os testes NPM RUN TEST.
 
-## 🔗 Links
+## 🔗 Acesso ao Código-Fonte no Github
 [![link](https://img.shields.io/badge/link-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://github.com/worldrules/PokeDexTest)
 
 
