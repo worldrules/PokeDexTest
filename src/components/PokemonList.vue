@@ -157,7 +157,6 @@ export default defineComponent({
 
     const loadInitialPokemons = async () => {
       await fetchAllPokemons();
-      console.log(pokemonList.value);
       loadFavorites();
     };
 
