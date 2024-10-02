@@ -87,7 +87,6 @@ export default defineComponent({
       selectedTypes.value = types;
       searchQuery.value = '';
       offset.value = 0;
-      console.log('Tipos selecionados:', selectedTypes.value);
       fetchAllPokemons();
     }, 300);
 
@@ -164,8 +163,7 @@ export default defineComponent({
       loadInitialPokemons();
     });
 
-    watch(selectedTypes, (newTypes) => {
-      console.log('Tipos selecionados:', newTypes);
+    watch(selectedTypes, () => {
       offset.value = 0;
     });
 
