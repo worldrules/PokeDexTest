@@ -117,7 +117,7 @@ export default defineComponent({
 
     });
 
-    watch(() => route.params.id, (newId) => {
+    watch(() => route.params.id, () => {
       loading.value = true;
       loadPokemonDetails();
     });

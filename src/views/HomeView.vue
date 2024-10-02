@@ -8,21 +8,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
 import PokemonList from '../components/PokemonList.vue';
 
 export default defineComponent({
   components: {
     PokemonList,
   },
-  setup() {
-    const router = useRouter();
 
-
-
-    return {
-    };
-  },
 });
 </script>
 
