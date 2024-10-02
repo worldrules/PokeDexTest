@@ -197,6 +197,7 @@ export default defineComponent({
 .pokemon-list-container {
   text-align: center;
   background-color: #fef68a;
+  border-radius: 2%;
 }
 
 .pokemon-list {
