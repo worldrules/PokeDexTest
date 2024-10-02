@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useTheme } from '@/composables/useTheme';
+import { useTheme } from './composables/useTheme';
 import { useI18n } from 'vue-i18n';
 
 export default defineComponent({

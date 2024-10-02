@@ -48,7 +48,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { usePokemon } from '@/composables/usePokemon';
+import { usePokemon } from '../composables/usePokemon';
 
 interface Stat {
   base_stat: number;
