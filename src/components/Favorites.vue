@@ -15,13 +15,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import PokemonCard from '@/components/PokemonCard.vue';
+import PokemonCard from './PokemonCard.vue';
 import { useI18n } from 'vue-i18n';
 
 
 export default defineComponent({
     components: {
-        PokemonCard,
+        PokemonCard
     },
     setup() {
         const { locale } = useI18n();

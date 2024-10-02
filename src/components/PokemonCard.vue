@@ -15,6 +15,7 @@
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
+  name: 'PokemonCard',
   props: {
     pokemon: {
       type: Object as PropType<{ name: string; url: string }>,
