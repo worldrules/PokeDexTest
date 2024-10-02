@@ -11,7 +11,7 @@
 
     <div class="pagination" v-if="paginatedPokemonList.length">
       <button @click="prevPage" :disabled="offset === 0">{{ $t('anterior') }}</button>
-      <span>Página {{ currentPage }}</span>
+      <span>{{ $t('pagina') }} {{ currentPage }}</span>
       <button @click="nextPage" :disabled="!hasMorePokemon">{{ $t('proxima') }}</button>
     </div>
 
@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, onMounted, ref, watch } from 'vue';
-import { usePokemon } from '@/composables/usePokemon';
+import { usePokemon } from '../composables/usePokemon';
 import { useRouter } from 'vue-router';
 import PokemonCard from './PokemonCard.vue';
 import PokemonFilter from './PokemonFilter.vue';
@@ -47,7 +47,6 @@ export default defineComponent({
 
     const toggleFavorite = (pokemonId: number, pokemon: { name: string; url: string }) => {
       const currentFavorites = JSON.parse(localStorage.getItem('favoritePokemons') || '[]');
-
       const index = currentFavorites.findIndex((fav: any) => fav.id === pokemonId);
 
       if (index > -1) {
@@ -77,7 +76,6 @@ export default defineComponent({
       selectedTypes.value = types;
       searchQuery.value = '';
       offset.value = 0;
-      console.log('Tipos selecionados:', selectedTypes.value);
       fetchAllPokemons();
     };
 
@@ -86,7 +84,7 @@ export default defineComponent({
 
       if (searchQuery.value) {
         const queryAsNumber = Number(searchQuery.value);
-        filteredList = filteredList.filter(pokemon => {
+        filteredList = filteredList.filter((pokemon: { id: number; name: string; }) => {
           if (!isNaN(queryAsNumber) && queryAsNumber > 0) {
             return pokemon.id === queryAsNumber;
           }
@@ -95,7 +93,7 @@ export default defineComponent({
       }
 
       if (selectedTypes.value.length > 0) {
-        filteredList = filteredList.filter(pokemon =>
+        filteredList = filteredList.filter((pokemon: { types: { type: { name: string; }; }[]; }) =>
           pokemon.types.some((type: { type: { name: string; }; }) => selectedTypes.value.includes(type.type.name))
         );
       }

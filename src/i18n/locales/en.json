@@ -13,7 +13,8 @@
   "proxima": "Next",
   "nevolui": "No evolution found...",
   "carregando": "Loading...",
-  "selected_types" : "Selected Types: "
+  "selected_types" : "Selected Types: ",
+  "pagina": "Page"
 
 
 }
