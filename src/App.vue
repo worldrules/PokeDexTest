@@ -71,5 +71,6 @@ export default defineComponent({
 
 .navbar-button:hover {
   background-color: #d86f27;
+  color: white;
 }
 </style>
