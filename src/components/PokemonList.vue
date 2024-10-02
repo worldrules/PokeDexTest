@@ -57,14 +57,12 @@ export default defineComponent({
 
     const toggleFavorite = (pokemonId: number, pokemon: { name: string; url: string }) => {
       const currentFavorites = JSON.parse(localStorage.getItem('favoritePokemons') || '[]');
-
       const index = currentFavorites.findIndex((fav: any) => fav.id === pokemonId);
 
       if (index > -1) {
         currentFavorites.splice(index, 1);
       } else {
         const pokemonImage = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
-
         currentFavorites.push({
           id: pokemonId,
           name: pokemon.name,
@@ -155,7 +153,15 @@ export default defineComponent({
     };
 
     const loadInitialPokemons = async () => {
-      await fetchAllPokemons();
+      const cachedPokemons = localStorage.getItem('cachedPokemons');
+
+      if (cachedPokemons) {
+        pokemonList.value = JSON.parse(cachedPokemons);
+      } else {
+        await fetchAllPokemons();
+        localStorage.setItem('cachedPokemons', JSON.stringify(pokemonList.value));
+      }
+
       loadFavorites();
     };
 
