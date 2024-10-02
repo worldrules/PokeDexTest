@@ -10,7 +10,7 @@
     </div>
 
     <div class="selected-types" v-if="selectedTypes.length">
-      Tipos selecionados: {{ selectedTypes.join(', ') }}
+      {{ $t('selected_types') }}: {{ selectedTypes.join(', ') }}
     </div>
   </div>
 </template>

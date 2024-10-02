@@ -12,7 +12,8 @@
   "anterior": "Previous",
   "proxima": "Next",
   "nevolui": "No evolution found...",
-  "carregando": "Loading..."
+  "carregando": "Loading...",
+  "selected_types" : "Selected Types: "
 
 
 }
