@@ -25,12 +25,19 @@ export function usePokemon() {
 
     const fetchAllPokemons = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}?limit=10000`);
-            pokemonList.value = response.data.results.map((pokemon: any, index: number) => ({
-                id: index + 1,
-                name: pokemon.name,
-                url: pokemon.url
+            const response = await axios.get(`${BASE_URL}?limit=500&offset=0`);
+
+            pokemonList.value = await Promise.all(response.data.results.map(async (pokemon: any, index: number) => {
+                const detailsResponse = await axios.get(pokemon.url);
+                const types = detailsResponse.data.types ? detailsResponse.data.types.map((type: any) => type.type.name) : [];
+                return {
+                    id: index + 1,
+                    name: pokemon.name,
+                    url: pokemon.url,
+                    types: types,
+                };
             }));
+
             totalPokemon.value = response.data.count;
         } catch (error) {
             console.error('Erro ao buscar todos os Pokémon:', error);
