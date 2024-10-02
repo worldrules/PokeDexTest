@@ -5,7 +5,7 @@
     <div class="type-filter">
       <button v-for="(color, type) in pokemonTypeColors" :key="type" :class="{ active: selectedTypes.includes(type) }"
         @click="toggleTypeFilter(type)" :style="{ backgroundColor: color }">
-        {{ type }}
+        {{ capitalizeFirstLetter(type) }}
       </button>
     </div>
 
@@ -47,6 +47,10 @@ export default defineComponent({
       emit('update:search', searchQuery.value);
     };
 
+    const capitalizeFirstLetter = (str: string) => {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
     const toggleTypeFilter = (type: string) => {
       const index = selectedTypes.value.indexOf(type);
       if (index > -1) {
@@ -63,6 +67,7 @@ export default defineComponent({
       selectedTypes,
       emitSearch,
       toggleTypeFilter,
+      capitalizeFirstLetter
     };
   },
 });
